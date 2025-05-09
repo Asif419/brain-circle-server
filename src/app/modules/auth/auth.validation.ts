@@ -21,7 +21,7 @@ const addressSchema = z.object({
 export const userRegistrationValidationSchema = z.object({
   // _id: objectIdSchema,
   clans: z.array(objectIdSchema).optional(),
-  expertise: z.array(objectIdSchema).optional(), 
+  expertise: z.array(objectIdSchema).optional(),
   name: z.string(),
   email: z.string().email(),
   role: z.enum(['admin', 'user']).default('user'),
@@ -44,15 +44,20 @@ export const userRegistrationValidationSchema = z.object({
 });
 
 const userLoginValidationSchema = z.object({
-  body: z.object({
-    email: z.string().email('Invalid email format').min(1, 'Email is required'),
-    password: z
-      .string({ invalid_type_error: 'Password must be string' })
-      .max(20, { message: 'Password can not be more than 20 characters' }),
-  }),
-});
+  email: z.string().email('Invalid email format').min(1, 'Email is required'),
+  password: z
+    .string({ invalid_type_error: 'Password must be string' })
+    .max(20, { message: 'Password can not be more than 20 characters' }),
+})
 
-export const authValidation = {
+const refreshTokenValidationSchema = z.object({
+  refreshToken: z.string({
+    required_error: 'Refresh Token is required',
+  }),
+})
+
+export const AuthValidation = {
   userRegistrationValidationSchema,
   userLoginValidationSchema,
+  refreshTokenValidationSchema,
 };

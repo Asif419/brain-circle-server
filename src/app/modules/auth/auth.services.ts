@@ -5,6 +5,7 @@ import { User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
 import httpStatus from 'http-status';
 import { createToken } from './auth.utils';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const registerUserIntoDB = async (payload: TUser) => {
   const userData: Partial<TUser> = payload;
@@ -55,7 +56,59 @@ const userLogIn = async (payload: TLoginUser) => {
   };
 };
 
-export const authServices = {
+const refreshToken = async (token: string) => {
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refresh_secret as string,
+  ) as JwtPayload;
+
+  const { userEmail, iat } = decoded;
+  console.log(decoded)
+
+  const isUserExists = await User.userExistenceCheckingByEmail(userEmail);
+  if (!isUserExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found');
+  }
+
+  // check if the user is already deleted
+  const isDeleted = isUserExists?.isDeleted;
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is already deleted');
+  }
+
+  // // check if the user is blocked
+  const isBlocked = isUserExists?.isBlocked
+  if (isUserExists?.isBlocked) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked');
+  }
+
+  // // checking password changing time and JWT created time
+  if (
+    isUserExists.passwordChangedAt &&
+    User.isJWTIssuedBeforePasswordChanged(
+      isUserExists?.passwordChangedAt,
+      iat as number,
+    )
+  ) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
+  }
+
+  const jwtPayload = {
+    userEmail: isUserExists?.email,
+    userRole: isUserExists.role,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  return { accessToken };
+};
+
+export const AuthService = {
   registerUserIntoDB,
   userLogIn,
+  refreshToken,
 };

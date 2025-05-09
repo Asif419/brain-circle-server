@@ -24,5 +24,4 @@ const handleDuplicateError = (err: any): TGenericErrorResponse => {
   };
 };
 
-
 export default handleDuplicateError;

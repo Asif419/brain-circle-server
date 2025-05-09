@@ -1,4 +1,4 @@
-# Blogify Backend
+# Brain-Circle Extended from Blogify Backend
 
 ## 📌 Overview
 

@@ -14,6 +14,7 @@ async function main() {
     });
   } catch (error) {
     /* empty */
+    console.error('Failed to start server:', error);
   }
 }
 

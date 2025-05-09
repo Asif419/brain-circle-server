@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { TErrorSources, TGenericErrorResponse } from '../interface/error';
 import httpStatus from 'http-status';
+import config from '../config';
 
 const handleCastError = (
   err: mongoose.Error.CastError,
@@ -18,7 +19,7 @@ const handleCastError = (
     message: 'Invalid ID',
     statusCode,
     error,
-    stack: err?.stack,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   };
 };
 

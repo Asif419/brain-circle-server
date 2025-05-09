@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import config from '../config';
 import { TErrorSources, TGenericErrorResponse } from '../interface/error';
 import httpStatus from 'http-status';
 
@@ -20,7 +21,7 @@ const handleDuplicateError = (err: any): TGenericErrorResponse => {
     message: 'Duplication Error',
     statusCode,
     error,
-    stack: err?.stack,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   };
 };
 

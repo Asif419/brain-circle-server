@@ -20,10 +20,10 @@ const loginByUser: RequestHandler = catchAsync(async (req, res) => {
   const result = await authServices.userLogIn(req.body);
   const { refreshToken, accessToken } = result;
 
-  res.cookie('refreshToken', refreshToken, {
-    secure: config.NODE_ENV == 'production',
-    httpOnly: true,
-  });
+  // res.cookie('refreshToken', refreshToken, {
+  //   secure: config.NODE_ENV == 'production',
+  //   httpOnly: true,
+  // });
 
   sendResponse(res, {
     success: true,

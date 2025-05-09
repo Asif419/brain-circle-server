@@ -1,4 +1,10 @@
 export const USER_ROLE = {
-  user: 'user',
   admin: 'admin',
+  user: 'user',
+} as const;
+
+export const USER_STATUS = {
+  Free: 'free',
+  Premium: 'premium',
+  Suspended: 'suspended',
 } as const;

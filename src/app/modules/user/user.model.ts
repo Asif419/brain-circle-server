@@ -3,18 +3,50 @@ import { TUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
+
+
 const userSchema = new Schema<TUser, UserModel>(
   {
+    clans: [{ type: Schema.Types.ObjectId, ref: 'Clan' }],
+    expertise: [{ type: Schema.Types.ObjectId, ref: 'Expertise' }],
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, select: 0 },
+    password: { type: String, required: true, select: false },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
+    passwordChangedAt: { type: Date },
+    passwordUpdatedAt: { type: Date },
+    avatar: String,
+    coverImage: String,
+    contactNo: String,
+    address: {
+      type:
+      {
+        address: {
+          street: String,
+          city: String,
+          state: String,
+          postalCode: String,
+          country: String,
+        },
+      }
+    },
+    bio: String,
+    gender: String,
+    dateOfBirth: Date,
+    status: {
+      type: String,
+      enum: ['free', 'premium', 'suspended'],
+      default: 'free',
+    },
+    verified: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
     isBlocked: { type: Boolean, default: false },
   },
   {
-    timestamps: true,
-  },
+    timestamps: { createdAt: 'createdAt', updatedAt: 'UpdatedAt' },
+  }
 );
+
 
 // hashing password
 userSchema.pre('save', async function (next) {

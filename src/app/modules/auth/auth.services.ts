@@ -9,7 +9,6 @@ import { createToken } from './auth.utils';
 const registerUserIntoDB = async (payload: TUser) => {
   const userData: Partial<TUser> = payload;
   const email = userData.email as string;
-  const password = userData.password;
 
   const isUserExists = await User.userExistenceCheckingByEmail(email);
   if (isUserExists) {

@@ -4,18 +4,33 @@ import httpStatus from 'http-status';
 import { UserServices } from "./user.services";
 
 const getSingleUserById = catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const result = await UserServices.getSingleUserFromDB(id);
-  
-    //send response
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'User is retrieved successfully',
-      data: result,
-    });
-  })
+  const { id } = req.params;
+  const result = await UserServices.getSingleUserFromDB(id);
+
+  //send response
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User is retrieved successfully',
+    data: result,
+  });
+});
+
+const updateUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const userUpdateData = req.body;
+  const result = await UserServices.updateUserIntoDB(id, userUpdateData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User updated successfully',
+    data: result,
+  });
+});
+
 
 export const UserController = {
-    getSingleUserById
+  getSingleUserById,
+  updateUser
 }

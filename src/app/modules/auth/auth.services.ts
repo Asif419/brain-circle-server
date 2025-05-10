@@ -35,6 +35,7 @@ const userLogIn = async (payload: TLoginUser) => {
   }
 
   const jwtPayload = {
+    userId: isUserExists._id,
     userEmail: isUserExists.email,
     userRole: isUserExists.role,
   };
@@ -78,7 +79,7 @@ const refreshToken = async (token: string) => {
 
   // // check if the user is blocked
   const isBlocked = isUserExists?.isBlocked
-  if (isUserExists?.isBlocked) {
+  if (isBlocked) {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked');
   }
 
@@ -94,6 +95,7 @@ const refreshToken = async (token: string) => {
   }
 
   const jwtPayload = {
+    userId: isUserExists?._id,
     userEmail: isUserExists?.email,
     userRole: isUserExists.role,
   };

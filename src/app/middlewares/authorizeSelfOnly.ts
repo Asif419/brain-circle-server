@@ -2,12 +2,11 @@ import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../config';
-import { TUserRole } from '../modules/user/user.interface';
 import { User } from '../modules/user/user.model';
 import catchAsync from '../utils/cathAsync';
 import AppError from '../error/AppError';
 
-const auth = (...requiredRules: TUserRole[]) => {
+const authorizeSelfOnly = () => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // check token has been send or not
     const token = req.headers.authorization;
@@ -20,27 +19,33 @@ const auth = (...requiredRules: TUserRole[]) => {
       config.jwt_access_secret as string,
     ) as JwtPayload;
 
-    const { userRole, userId, iat } = decoded;
+    const { userId, iat } = decoded;
+    const paramId = req.params.id;
+    
+    //checking-1: user is not owner of the data
+    if(paramId != userId) {
+        throw new AppError(httpStatus.NOT_FOUND, 'You are not authorized to access');
+    }
 
-    //checking-1: user exist or not
+    //checking-2: user exist or not
     const isUserExists = await User.userExistenceCheckingByID(userId);
     if (!isUserExists) {
       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found');
     }
 
-    //checking-2: if the user is already deleted
+    //checking-3: if the user is already deleted
     const isDeleted = isUserExists.isDeleted;
     if (isDeleted) {
       throw new AppError(httpStatus.FORBIDDEN, 'This user is already deleted');
     }
 
-    //checking-3: if the user is suspended
+    //checking-4: if the user is suspended
     const userStatus = isUserExists?.status;
     if (userStatus === 'suspended') {
       throw new AppError(httpStatus.FORBIDDEN, 'This user is Suspended');
     }
 
-    //checking-4: password changing time and JWT created time
+    //checking-5: password changing time and JWT created time
     if (
       isUserExists.passwordChangedAt &&
       User.isJWTIssuedBeforePasswordChanged(
@@ -51,15 +56,10 @@ const auth = (...requiredRules: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
     }
 
-    //checking-5: roles are matched
-    if (requiredRules && !requiredRules.includes(userRole)) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
-    }
-
     // decoded undefined
     req.user = decoded as JwtPayload;
     next();
   });
 };
 
-export default auth;
+export default authorizeSelfOnly;

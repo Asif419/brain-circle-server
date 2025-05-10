@@ -4,9 +4,15 @@ import { UserValidation } from './user.validation';
 import { UserController } from './user.controller';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
+import authorizeSelfOnly from '../../middlewares/authorizeSelfOnly';
 
 const router = express.Router();
 
-router.get('/:id', auth(USER_ROLE.user), UserController.getSingleUserById);
+router.get('/:id', authorizeSelfOnly(), UserController.getSingleUserById);
+router.patch('/:id',
+    authorizeSelfOnly(),
+    validateRequest(UserValidation.userUpdateValidationSchema),
+    UserController.updateUser,
+);
 
 export const UserRoutes = router;

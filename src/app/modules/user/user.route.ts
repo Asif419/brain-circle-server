@@ -1,9 +1,12 @@
 import express from 'express'
 import validateRequest from '../../middlewares/validateRequest';
-import { userValidation } from './user.validation';
-import { userController } from './user.controller';
+import { UserValidation } from './user.validation';
+import { UserController } from './user.controller';
+import auth from '../../middlewares/auth';
+import { USER_ROLE } from './user.constant';
 
 const router = express.Router();
 
+router.get('/:id', auth(USER_ROLE.user), UserController.getSingleUserById);
 
-export const userRoutes = router;
+export const UserRoutes = router;

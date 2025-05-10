@@ -8,13 +8,13 @@ const router = express.Router();
 router.post(
   '/register',
   validateRequest(AuthValidation.userRegistrationValidationSchema),
-AuthController.createUser,
+  AuthController.createUser,
 );
 
 router.post(
   '/login',
   validateRequest(AuthValidation.userLoginValidationSchema),
-AuthController.loginByUser,
+  AuthController.loginByUser,
 );
 
 router.post(
@@ -23,4 +23,4 @@ router.post(
   AuthController.refreshToken,
 );
 
-export const authRoutes = router;
+export const AuthRoutes = router;

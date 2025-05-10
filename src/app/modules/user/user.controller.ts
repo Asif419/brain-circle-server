@@ -1,6 +1,21 @@
-import { RequestHandler } from "express";
 import catchAsync from "../../utils/cathAsync";
+import sendResponse from "../../utils/sendResponse";
+import httpStatus from 'http-status';
+import { UserServices } from "./user.services";
 
-export const userController = {
-    
+const getSingleUserById = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await UserServices.getSingleUserFromDB(id);
+  
+    //send response
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User is retrieved successfully',
+      data: result,
+    });
+  })
+
+export const UserController = {
+    getSingleUserById
 }

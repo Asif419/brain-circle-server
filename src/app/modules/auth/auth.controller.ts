@@ -6,6 +6,7 @@ import httpStatus from 'http-status';
 import config from '../../config';
 
 const createUser: RequestHandler = catchAsync(async (req, res) => {
+  console.log(req.body)
   const result = await AuthService.registerUserIntoDB(req.body);
 
   sendResponse(res, {

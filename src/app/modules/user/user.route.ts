@@ -14,6 +14,7 @@ router.patch('/:id',
     validateRequest(UserValidation.userUpdateValidationSchema),
     UserController.updateUser,
 );
+router.patch('/:id/change-status', authorizeSelfOnly(), UserController.changeUserStatus);
 router.patch('/:id/activate', authorizeSelfOnly(), UserController.activateUser);
 router.patch('/:id/deactivate', authorizeSelfOnly(), UserController.deactivateUser);
 

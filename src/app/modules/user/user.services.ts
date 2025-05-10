@@ -36,6 +36,14 @@ const updateUserIntoDB = async (id: string, payload: Partial<TUser>) => {
   return result;
 };
 
+const changeUserStatusIntoDB = async (id: string, userStatus: string) => {
+  const result = await User.findByIdAndUpdate(id,
+    { $set: { status: userStatus } },
+    { new: true },
+  );
+  return result;
+}
+
 const activateUserIntoDB = async (id: string) => {
   const result = await User.findByIdAndUpdate(id,
     { $set: { isDeactivated: false } },
@@ -55,6 +63,7 @@ const deactivateUserIntoDB = async (id: string) => {
 export const UserServices = {
   getSingleUserFromDB,
   updateUserIntoDB,
+  changeUserStatusIntoDB,
   activateUserIntoDB,
   deactivateUserIntoDB,
 };

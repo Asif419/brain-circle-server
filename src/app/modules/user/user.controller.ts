@@ -29,6 +29,19 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+const changeUserStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const userStatus = req.body.status;
+  const result = await UserServices.changeUserStatusIntoDB(id, userStatus);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User updated successfully',
+    data: result,
+  });
+});
+
 const activateUser = catchAsync(async (req, res) => {
   const {id} = req.params;
   const result = await UserServices.activateUserIntoDB(id);
@@ -39,7 +52,7 @@ const activateUser = catchAsync(async (req, res) => {
     message: 'User activated successfully',
     data: result,
   });
-})
+});
 
 const deactivateUser = catchAsync(async (req, res) => {
   const {id} = req.params;
@@ -51,7 +64,7 @@ const deactivateUser = catchAsync(async (req, res) => {
     message: 'User deactivated successfully',
     data: result,
   });
-})
+});
 
 
 export const UserController = {
@@ -59,4 +72,5 @@ export const UserController = {
   updateUser,
   activateUser,
   deactivateUser,
+  changeUserStatus,
 }

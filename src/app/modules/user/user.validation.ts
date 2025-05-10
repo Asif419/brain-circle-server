@@ -33,6 +33,7 @@ export const userUpdateValidationSchema = z.object({
   dateOfBirth: z.coerce.date().optional(),
   status: z.enum(['free', 'premium', 'suspended']).optional(),
   verified: z.boolean().optional(),
+  isDeactivated: z.boolean().optional(),
   isDeleted: z.boolean().optional(),
   isBlocked: z.boolean().optional(),
   clans: z.array(objectIdSchema).optional(),

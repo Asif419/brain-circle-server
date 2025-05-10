@@ -39,6 +39,7 @@ export const userRegistrationValidationSchema = z.object({
   createdAt: z.date().optional(),
   UpdatedAt: z.date().optional(),
   verified: z.boolean().optional(),
+  isDeactivated: z.boolean().optional(),
   isDeleted: z.boolean().optional(),
   isBlocked: z.literal(false).optional(),
 });

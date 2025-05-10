@@ -29,8 +29,34 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+const activateUser = catchAsync(async (req, res) => {
+  const {id} = req.params;
+  const result = await UserServices.activateUserIntoDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User activated successfully',
+    data: result,
+  });
+})
+
+const deactivateUser = catchAsync(async (req, res) => {
+  const {id} = req.params;
+  const result = await UserServices.deactivateUserIntoDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User deactivated successfully',
+    data: result,
+  });
+})
+
 
 export const UserController = {
   getSingleUserById,
-  updateUser
+  updateUser,
+  activateUser,
+  deactivateUser,
 }

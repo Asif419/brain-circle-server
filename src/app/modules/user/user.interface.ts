@@ -32,6 +32,7 @@ export interface TUser {
   createdAt?: Date;
   UpdatedAt?: Date;
   verified?: boolean;
+  isDeactivated?: boolean;
   isDeleted?: boolean;
   isBlocked?: false;
 }

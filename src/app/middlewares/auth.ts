@@ -40,7 +40,13 @@ const auth = (...requiredRules: TUserRole[]) => {
       throw new AppError(httpStatus.FORBIDDEN, 'This user is Suspended');
     }
 
-    //checking-4: password changing time and JWT created time
+    //checking-4: if the user is suspended
+    const userDeactivated = isUserExists?.isDeactivated;
+    if (userDeactivated) {
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is Deactivated');
+    }
+
+    //checking-5: password changing time and JWT created time
     if (
       isUserExists.passwordChangedAt &&
       User.isJWTIssuedBeforePasswordChanged(
@@ -51,7 +57,7 @@ const auth = (...requiredRules: TUserRole[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
     }
 
-    //checking-5: roles are matched
+    //checking-6: roles are matched
     if (requiredRules && !requiredRules.includes(userRole)) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
     }

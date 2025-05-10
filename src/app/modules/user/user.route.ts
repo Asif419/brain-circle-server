@@ -14,5 +14,8 @@ router.patch('/:id',
     validateRequest(UserValidation.userUpdateValidationSchema),
     UserController.updateUser,
 );
+router.patch('/:id/activate', authorizeSelfOnly(), UserController.activateUser);
+router.patch('/:id/deactivate', authorizeSelfOnly(), UserController.deactivateUser);
+
 
 export const UserRoutes = router;
